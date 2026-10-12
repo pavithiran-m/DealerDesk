@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIKMO DealerDesk — Intelligent Commerce & Operations Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Base Light Theme Tokens */
+      --bg-base: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-glass: rgba(255, 255, 255, 0.9);
+      --bg-subtle: #f1f5f9;
+      --bg-muted: #e2e8f0;
+      
+      /* Primary Dynamic Palette (Default: Sapphire Indigo) */
+      --primary: #4f46e5;
+      --primary-rgb: 79, 70, 229;
+      --primary-light: #eef2ff;
+      --primary-hover: #4338ca;
+      --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+      
+      --accent: #0ea5e9;
+      --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+      
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      
+      --border: #e2e8f0;
+      --border-highlight: rgba(79, 70, 229, 0.25);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+      --shadow-float: 0 20px 30px -10px rgba(79, 70, 229, 0.12), 0 8px 12px -4px rgba(15, 23, 42, 0.04);
+      --shadow-glow: 0 0 25px rgba(79, 70, 229, 0.2);
+
+      --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', Consolas, Menlo, Monaco, monospace;
+    }
+
+    /* Dynamic Theme Overrides */
+    body.theme-emerald {
+      --primary: #059669;
+      --primary-rgb: 5, 150, 105;
+      --primary-light: #ecfdf5;
+      --primary-hover: #047857;
+      --primary-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    }
+
+    body.theme-rose {
+      --primary: #e11d48;
+      --primary-rgb: 225, 29, 72;
+      --primary-light: #fff1f2;
+      --primary-hover: #be123c;
+      --primary-gradient: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+    }
+
+    body.theme-violet {
+      --primary: #7c3aed;
+      --primary-rgb: 124, 58, 237;
+      --primary-light: #f5f3ff;
+      --primary-hover: #6d28d9;
+      --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.04) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.04) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Floating Header & Command Bar                                  */
+    /* ------------------------------------------------------------- */
+    .top-navbar {
+      height: 72px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-md);
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.2rem;
+      box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .brand-mark:hover {
+      transform: scale(1.06) rotate(-3deg);
+    }
+
+    .brand-titles h1 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .brand-titles span {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+
+    /* Command Search Pill */
+    .command-search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 30px;
+      width: 380px;
+      max-width: 35vw;
+      transition: all 0.2s ease;
+      cursor: text;
+    }
+
+    .command-search:focus-within {
+      background: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12);
+    }
+
+    .command-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-family: inherit;
+      font-size: 0.88rem;
+      width: 100%;
+      color: var(--text-main);
+    }
+
+    .command-kbd {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Theme Switcher Dots */
+    .theme-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-subtle);
+      padding: 4px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .theme-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .theme-dot:hover {
+      transform: scale(1.25);
+    }
+
+    .dot-indigo { background: #4f46e5; }
+    .dot-emerald { background: #059669; }
+    .dot-rose { background: #e11d48; }
+    .dot-violet { background: #7c3aed; }
+
+    .dealer-profile-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-subtle);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dealer-profile-chip:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .dealer-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-trigger-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-gradient);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.86rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.25);
+      transition: all 0.2s ease;
+    }
+
+    .cart-trigger-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.35);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Secondary Navigation Bar (Segmented Tabs) - Clean & Responsive */
+    /* ------------------------------------------------------------- */
+    .segmented-nav-container {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .segmented-nav-container::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    .nav-tab {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 14px 14px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-main);
+    }
+
+    .nav-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .nav-tab-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      padding: 2px 7px;
+      border-radius: 12px;
+    }
+
+    .nav-tab.active .nav-tab-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Content Layout                                                */
+    /* ------------------------------------------------------------- */
+    .app-main {
+      padding: 28px 32px;
+      max-width: 1540px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    .tab-panel {
+      display: none;
+      animation: tabFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Hero Banner & Live KPI Cards                                  */
+    /* ------------------------------------------------------------- */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.08) 0%, rgba(14, 165, 233, 0.04) 100%);
+      border: 1px solid rgba(var(--primary-rgb), 0.15);
+      border-radius: var(--radius-xl);
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      right: -50px;
+      bottom: -50px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(var(--primary-rgb), 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-text h2 {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .hero-text p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-gradient {
+      background: var(--primary-gradient);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(var(--primary-rgb), 0.25);
+      transition: all 0.2s ease;
+    }
+
+    .btn-gradient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.35);
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--shadow-subtle);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .kpi-deck {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-card);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-float);
+      border-color: var(--border-highlight);
+    }
+
+    .kpi-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .kpi-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .kpi-icon-pill {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .kpi-number {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .kpi-footer-tag {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Category Quick-Access Grid (Distinct Interactive Feature)      */
+    /* ------------------------------------------------------------- */
+    .section-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .section-title-bar h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .category-quick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .cat-quick-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .cat-quick-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+      background: var(--primary-light);
+    }
+
+    .cat-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--bg-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .cat-card-info h4 {
+      font-family: var(--font-heading);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .cat-card-info span {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* System Architecture & Status Matrix                           */
+    /* ------------------------------------------------------------- */
+    .services-status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .service-status-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .service-status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .service-badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--success-light);
+      color: #065f46;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .service-status-card h4 {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .service-status-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Modern Product Grid View                                      */
+    /* ------------------------------------------------------------- */
+    .catalogue-controls {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 22px;
+      margin-bottom: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .category-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      flex-wrap: wrap;
+    }
+
+    .cat-pill {
+      background: var(--bg-subtle);
+      border: 1px solid transparent;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .cat-pill:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .cat-pill.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.25);
+    }
+
+    .product-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-float);
+      border-color: var(--border-highlight);
+    }
+
+    .card-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .sku-chip {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: var(--bg-subtle);
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .stock-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .stock-in { background: var(--success-light); color: #065f46; }
+    .stock-out { background: var(--danger-light); color: #991b1b; }
+
+    .product-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    .product-fitment {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--bg-subtle);
+    }
+
+    .price-tag {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .card-action-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      border: none;
+      background: transparent;
+      padding: 4px 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: background 0.15s ease;
+    }
+
+    .qty-btn:hover {
+      background: var(--border);
+    }
+
+    .qty-input {
+      width: 28px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-weight: 700;
+      font-size: 0.82rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .btn-add-cart {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-add-cart:hover {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Copilot AI Workspace (Split-Pane Design)                       */
+    /* ------------------------------------------------------------- */
+    .copilot-split-view {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      height: calc(100vh - 210px);
+      min-height: 580px;
+    }
+
+    .chat-pane {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-stream {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      background: #fafbfc;
+    }
+
+    .msg-bubble {
+      max-width: 80%;
+      padding: 14px 20px;
+      border-radius: var(--radius-lg);
+      font-size: 0.92rem;
+      line-height: 1.55;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .msg-bot {
+      align-self: flex-start;
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: var(--primary-gradient);
+      color: #ffffff;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.25);
+    }
+
+    .tool-timeline-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 8px;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    .tool-timeline-badge.order-action {
+      background: var(--success-light);
+      color: #065f46;
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .chat-prompt-chips {
+      padding: 10px 20px;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .prompt-chip {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .prompt-chip:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .chat-bottom-bar {
+      padding: 16px 20px;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input-field {
+      flex: 1;
+      padding: 12px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .chat-input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+    }
+
+    .copilot-info-pane {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 22px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    .info-card {
+      background: var(--bg-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .info-card h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .info-card p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Order Pipeline Stepper                                        */
+    /* ------------------------------------------------------------- */
+    .pipeline-stepper-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 28px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .step-item.active {
+      color: var(--primary);
+    }
+
+    .step-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg-subtle);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .step-item.active .step-circle {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.35);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Data Tables                                                   */
+    /* ------------------------------------------------------------- */
+    .table-container-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .table-header-bar {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .clean-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    .clean-table th {
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .clean-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    .clean-table tr:hover td {
+      background: #fafbfc;
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Cart Modal Drawer                                             */
+    /* ------------------------------------------------------------- */
+    .cart-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(6px);
+      z-index: 50;
+      display: none;
+    }
+
+    .cart-drawer-card {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 440px;
+      max-width: 92vw;
+      height: 100vh;
+      background: #fff;
+      box-shadow: var(--shadow-float);
+      z-index: 51;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cart-drawer-card.open {
+      transform: translateX(0);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Interactive Toast Notifications System                        */
+    /* ------------------------------------------------------------- */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideToastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s ease;
+      max-width: 380px;
+    }
+
+    @keyframes slideToastIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .toast.toast-success { border-left-color: var(--success); }
+    .toast.toast-warning { border-left-color: var(--warning); }
+    .toast.toast-danger { border-left-color: var(--danger); }
+  </style>
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ============================================================ -->
+  <!-- Top Navigation & Global Header                                -->
+  <!-- ============================================================ -->
+  <header class="top-navbar">
+    <div class="brand-section" onclick="switchNavTab('overview')">
+      <div class="brand-mark">VK</div>
+      <div class="brand-titles">
+        <h1>VIKMO DealerDesk</h1>
+        <span>Operations & AI Platform</span>
+      </div>
+    </div>
+
+    <!-- Global Quick Search -->
+    <div class="command-search" onclick="focusSearch()">
+      <svg style="width:18px;height:18px;color:var(--text-muted);" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="global-search-input" placeholder="Quick search parts, SKUs, or orders..." oninput="onGlobalSearch()">
+      <span class="command-kbd">Ctrl K</span>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="top-actions">
+      <!-- Theme Switcher -->
+      <div class="theme-dots" title="Select Color Accent">
+        <div class="theme-dot dot-indigo" onclick="setAccentTheme('')" title="Sapphire Indigo"></div>
+        <div class="theme-dot dot-emerald" onclick="setAccentTheme('theme-emerald')" title="Emerald Mint"></div>
+        <div class="theme-dot dot-rose" onclick="setAccentTheme('theme-rose')" title="Rose Crimson"></div>
+        <div class="theme-dot dot-violet" onclick="setAccentTheme('theme-violet')" title="Royal Violet"></div>
+      </div>
+
+      <!-- Active Dealer Switcher -->
+      <div class="dealer-profile-chip" onclick="switchNavTab('dealers')" title="Click to switch active ordering dealer">
+        <div class="dealer-avatar" id="dealer-avatar-initials">AB</div>
+        <span id="active-dealer-label">ABC Motors (DLR-001)</span>
+      </div>
+
+      <!-- Slide Cart Button -->
+      <button class="cart-trigger-btn" onclick="toggleCartDrawer(true)">
+        <svg style="width:18px;height:18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        Cart (<span id="cart-counter">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- Segmented Primary Navigation Tabs                             -->
+  <!-- ============================================================ -->
+  <nav class="segmented-nav-container">
+    <div class="nav-tab active" onclick="switchNavTab('overview')">
+      <svg style="width:17px;height:17px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+      Operations Overview
+    </div>
+    <div class="nav-tab" onclick="switchNavTab('catalogue')">
+      <svg style="width:17px;height:17px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+      Product Catalogue
+      <span class="nav-tab-badge" id="tab-cat-badge">600</span>
+    </div>
+    <div class="nav-tab" onclick="switchNavTab('assistant')">
+      <svg style="width:17px;height:17px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+      AI Dealer Assistant
+      <span class="nav-tab-badge" style="background:#dcfce7;color:#15803d;">Live Tool-Calling</span>
+    </div>
+    <div class="nav-tab" onclick="switchNavTab('orders')">
+      <svg style="width:17px;height:17px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+      Orders & State Machine
+    </div>
+    <div class="nav-tab" onclick="switchNavTab('forecasting')">
+      <svg style="width:17px;height:17px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+      Demand Forecast & ML
+      <span class="nav-tab-badge">40 SKUs</span>
+    </div>
+    <div class="nav-tab" onclick="switchNavTab('dealers')">
+      <svg style="width:17px;height:17px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+      Dealer Network (25)
+    </div>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- Main Application Body                                         -->
+  <!-- ============================================================ -->
+  <main class="app-main">
+
+    <!-- TAB 1: OPERATIONS OVERVIEW -->
+    <section id="panel-overview" class="tab-panel active">
+      <div class="hero-banner">
+        <div class="hero-text">
+          <h2>Autonomous Spare Parts Distribution Hub</h2>
+          <p>Real-time inventory synchronization, deterministic order concurrency locks, statistical demand forecasting, and tool-augmented GenAI assistance.</p>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-gradient" onclick="switchNavTab('assistant')">
+            💬 Launch AI Copilot
+          </button>
+          <button class="btn-outline" onclick="triggerSupplierSync()">
+            🔄 Trigger Supplier Sync
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Cards Deck -->
+      <div class="kpi-deck">
+        <div class="kpi-card">
+          <div class="kpi-meta">
+            <span class="kpi-title">Active Catalogue</span>
+            <div class="kpi-icon-pill">📦</div>
+          </div>
+          <div class="kpi-number" id="kpi-product-total">600</div>
+          <div class="kpi-footer-tag">✓ Fully Seeded in PostgreSQL</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-meta">
+            <span class="kpi-title">Dealer Accounts</span>
+            <div class="kpi-icon-pill">🏪</div>
+          </div>
+          <div class="kpi-number" id="kpi-dealer-total">25</div>
+          <div class="kpi-footer-tag">✓ South India Territory</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-meta">
+            <span class="kpi-title">Purchase Orders</span>
+            <div class="kpi-icon-pill">📋</div>
+          </div>
+          <div class="kpi-number" id="kpi-order-total">0</div>
+          <div class="kpi-footer-tag" style="color:var(--primary);">✓ Pessimistic Row-Locked</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-meta">
+            <span class="kpi-title">Engine Health</span>
+            <div class="kpi-icon-pill">⚡</div>
+          </div>
+          <div class="kpi-number" style="color:var(--success);">200 OK</div>
+          <div class="kpi-footer-tag">✓ 0.00s Concurrency Latency</div>
+        </div>
+      </div>
+
+      <!-- Interactive Category Quick-Access -->
+      <div class="section-title-bar">
+        <h3>Parts Categories Directory</h3>
+        <span style="font-size:0.82rem;color:var(--text-muted);">Click any category to filter catalogue</span>
+      </div>
+
+      <div class="category-quick-grid">
+        <div class="cat-quick-card" onclick="jumpToCategory('Brakes')">
+          <div class="cat-icon-box">🛑</div>
+          <div class="cat-card-info">
+            <h4>Brakes & Pads</h4>
+            <span>Discs, Shoes & Calipers</span>
+          </div>
+        </div>
+
+        <div class="cat-quick-card" onclick="jumpToCategory('Chains')">
+          <div class="cat-icon-box">⛓️</div>
+          <div class="cat-card-info">
+            <h4>Chains & Sprockets</h4>
+            <span>Drive chains & kits</span>
+          </div>
+        </div>
+
+        <div class="cat-quick-card" onclick="jumpToCategory('Filters')">
+          <div class="cat-icon-box">🌪️</div>
+          <div class="cat-card-info">
+            <h4>Filters & Intake</h4>
+            <span>Air, Oil & Fuel Filters</span>
+          </div>
+        </div>
+
+        <div class="cat-quick-card" onclick="jumpToCategory('Engine & Oils')">
+          <div class="cat-icon-box">🛢️</div>
+          <div class="cat-card-info">
+            <h4>Engine & Oils</h4>
+            <span>Lubricants & Engine kits</span>
+          </div>
+        </div>
+
+        <div class="cat-quick-card" onclick="jumpToCategory('Electricals')">
+          <div class="cat-icon-box">⚡</div>
+          <div class="cat-card-info">
+            <h4>Electrical Parts</h4>
+            <span>Spark Plugs & Horns</span>
+          </div>
+        </div>
+
+        <div class="cat-quick-card" onclick="jumpToCategory('Accessories')">
+          <div class="cat-icon-box">🛡️</div>
+          <div class="cat-card-info">
+            <h4>Accessories</h4>
+            <span>Covers, Mounts & Grips</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Architecture & Telemetry Grid -->
+      <div class="section-title-bar">
+        <h3>Platform Telemetry & Architecture Status</h3>
+        <span style="font-size:0.82rem;color:var(--text-muted);">Real-time services health</span>
+      </div>
+
+      <div class="services-status-grid">
+        <div class="service-status-card">
+          <div class="service-status-header">
+            <h4>Database & Data Layer</h4>
+            <span class="service-badge-live"><span class="pulse-dot"></span> PostgreSQL 18</span>
+          </div>
+          <p>Local dedicated database cluster on port 5433 with 600 SKUs and 25 seeded dealer records with ACID compliance.</p>
+        </div>
+
+        <div class="service-status-card">
+          <div class="service-status-header">
+            <h4>Order Concurrency Engine</h4>
+            <span class="service-badge-live"><span class="pulse-dot"></span> Pessimistic Lock</span>
+          </div>
+          <p>Deterministic <code>select_for_update()</code> with sorted SKU keys eliminating deadlock and preventing negative inventory.</p>
+        </div>
+
+        <div class="service-status-card">
+          <div class="service-status-header">
+            <h4>AI Dealer Assistant</h4>
+            <span class="service-badge-live"><span class="pulse-dot"></span> Tool-Calling Ready</span>
+          </div>
+          <p>Multi-provider GenAI architecture supporting Groq (Llama-3.3-70b), OpenAI, and Gemini with real-time database tools.</p>
+        </div>
+
+        <div class="service-status-card">
+          <div class="service-status-header">
+            <h4>ML Demand Forecasting</h4>
+            <span class="service-badge-live"><span class="pulse-dot"></span> Ridge 4-Week Horizon</span>
+          </div>
+          <p>Statistical reorder formula: $SS = \lceil 1.65 \times \sigma \times \sqrt{L} \rceil$ calculated dynamically across all 40 tracked SKUs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: PRODUCT CATALOGUE (GRID VIEW) -->
+    <section id="panel-catalogue" class="tab-panel">
+      <div class="catalogue-controls">
+        <div class="category-pills" id="category-pills-list">
+          <button class="cat-pill active" onclick="filterCategory('')">All Parts</button>
+          <button class="cat-pill" onclick="filterCategory('Brakes')">Brakes</button>
+          <button class="cat-pill" onclick="filterCategory('Chains')">Chains</button>
+          <button class="cat-pill" onclick="filterCategory('Filters')">Filters</button>
+          <button class="cat-pill" onclick="filterCategory('Engine & Oils')">Engine & Oils</button>
+          <button class="cat-pill" onclick="filterCategory('Electricals')">Electricals</button>
+          <button class="cat-pill" onclick="filterCategory('Accessories')">Accessories</button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:0.85rem;font-weight:600;color:var(--text-muted);" id="catalogue-results-counter">
+            Loading catalogue items...
+          </span>
+          <button class="btn-outline" style="padding:6px 12px;font-size:0.8rem;" onclick="loadProducts()">
+            🔄 Refresh
+          </button>
+        </div>
+      </div>
+
+      <div class="product-cards-grid" id="product-cards-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- TAB 3: AI DEALER ASSISTANT (SPLIT COPILOT VIEW) -->
+    <section id="panel-assistant" class="tab-panel">
+      <div class="copilot-split-view">
+        <div class="chat-pane">
+          <div class="chat-stream" id="copilot-chat-box">
+            <div class="msg-bubble msg-bot">
+              👋 <b>Welcome to DealerDesk Copilot.</b> I am connected directly to your PostgreSQL warehouse. I can check live stock across all 600 SKUs, answer vehicle compatibility queries, and draft orders with exact 18% GST calculation. How can I help your dealership today?
+            </div>
+          </div>
+
+          <div class="chat-prompt-chips">
+            <button class="prompt-chip" onclick="quickAsk('Do you have front brake pads for Bajaj Pulsar 150?')">🏍️ Brake pads for Pulsar 150?</button>
+            <button class="prompt-chip" onclick="quickAsk('Check live warehouse stock and price for BRK-1044')">📦 Stock & price for BRK-1044</button>
+            <button class="prompt-chip" onclick="quickAsk('Create a draft order for 3 units of BRK-1044')">🛒 Draft order for 3 units of BRK-1044</button>
+          </div>
+
+          <div class="chat-bottom-bar">
+            <input type="text" class="chat-input-field" id="copilot-text-input" placeholder="Ask about spare parts or draft purchase orders..." onkeydown="if(event.key==='Enter') executeCopilotTurn()">
+            <button class="btn-gradient" id="copilot-send-btn" onclick="executeCopilotTurn()">
+              Send
+              <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Assistant Knowledge Pane -->
+        <div class="copilot-info-pane">
+          <div class="info-card">
+            <h4>Live Database Grounding</h4>
+            <p>Every price and stock figure cited comes directly from PostgreSQL at the millisecond of your request. Zero hallucinated figures.</p>
+          </div>
+
+          <div class="info-card">
+            <h4>Tool-Calling Capabilities</h4>
+            <p>The agent uses function calls: <code>search_parts</code>, <code>check_stock</code>, and <code>create_draft_order</code>.</p>
+          </div>
+
+          <div class="info-card">
+            <h4>Prompt Injection Resistant</h4>
+            <p>Supplier descriptions and catalogue strings are sanitized and treated strictly as untrusted data.</p>
+          </div>
+
+          <button class="btn-outline" style="width:100%;justify-content:center;" onclick="resetCopilotSession()">
+            🔄 Start New Session
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: ORDERS & STATE MACHINE -->
+    <section id="panel-orders" class="tab-panel">
+      <!-- Order Lifecycle Stepper -->
+      <div class="pipeline-stepper-box">
+        <div class="step-item active">
+          <div class="step-circle">1</div>
+          <span>DRAFT</span>
+        </div>
+        <div style="flex:1;height:2px;background:var(--border);margin:0 16px;"></div>
+        <div class="step-item">
+          <div class="step-circle">2</div>
+          <span>CONFIRMED</span>
+        </div>
+        <div style="flex:1;height:2px;background:var(--border);margin:0 16px;"></div>
+        <div class="step-item">
+          <div class="step-circle">3</div>
+          <span>DISPATCHED</span>
+        </div>
+        <div style="flex:1;height:2px;background:var(--border);margin:0 16px;"></div>
+        <div class="step-item">
+          <div class="step-circle">4</div>
+          <span>DELIVERED</span>
+        </div>
+      </div>
+
+      <div class="table-container-card">
+        <div class="table-header-bar">
+          <h3 style="font-family:var(--font-heading);font-weight:700;">Active Orders Directory</h3>
+          <button class="btn-outline" onclick="loadOrders()">🔄 Refresh Orders</button>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>Order Number</th>
+                <th>Dealer</th>
+                <th>Status</th>
+                <th>Line Items</th>
+                <th>Subtotal</th>
+                <th>Tax (18%)</th>
+                <th>Grand Total</th>
+                <th>Transitions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody-list">
+              <tr><td colspan="8" style="text-align:center;padding:40px;">No orders found yet. Add items from the catalogue to create one!</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: DEMAND FORECAST & ML -->
+    <section id="panel-forecasting" class="tab-panel">
+      <div class="table-container-card">
+        <div class="table-header-bar">
+          <div>
+            <h3 style="font-family:var(--font-heading);font-weight:700;">Dynamic Reorder Suggestions (40 SKUs)</h3>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">Calculated using statistical variance (σ), lead time (L), and 4-week Ridge demand forecast</p>
+          </div>
+          <span class="nav-tab-badge" style="background:#e0f2fe;color:#0284c7;font-size:0.8rem;">Safety Stock = ceil(1.65 × σ × √L)</span>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Current Stock</th>
+                <th>Lead Time</th>
+                <th>Lead Time Demand</th>
+                <th>Safety Stock</th>
+                <th>Reorder Point</th>
+                <th>Suggested Reorder</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="reorder-tbody-list">
+              <tr><td colspan="8" style="text-align:center;padding:40px;">Loading reorder suggestions...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: DEALER DIRECTORY -->
+    <section id="panel-dealers" class="tab-panel">
+      <div class="table-container-card">
+        <div class="table-header-bar">
+          <h3 style="font-family:var(--font-heading);font-weight:700;">Registered Dealer Network (25)</h3>
+          <span style="font-size:0.82rem;color:var(--text-muted);">Click to switch active ordering dealer</span>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Dealer Code</th>
+                <th>Business Name</th>
+                <th>City</th>
+                <th>Phone</th>
+                <th>GSTIN</th>
+                <th>Credit Limit</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dealers-tbody-list">
+              <tr><td colspan="8" style="text-align:center;padding:40px;">Loading dealer network...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- Cart Drawer Component                                        -->
+  <!-- ============================================================ -->
+  <div class="cart-backdrop" id="cart-backdrop" onclick="toggleCartDrawer(false)"></div>
+  <aside class="cart-drawer-card" id="cart-drawer-card">
+    <div style="padding:22px 26px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <h3 style="font-family:var(--font-heading);font-weight:800;font-size:1.15rem;">Shopping Cart</h3>
+      <button class="btn-outline" style="padding:6px 12px;" onclick="toggleCartDrawer(false)">✕ Close</button>
+    </div>
+
+    <div style="flex:1;padding:22px 26px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;" id="cart-items-box">
+      <div style="text-align:center;padding:50px 0;color:var(--text-muted);">Your cart is empty.</div>
+    </div>
+
+    <div style="padding:22px 26px;border-top:1px solid var(--border);background:#fafbfc;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:0.88rem;color:var(--text-muted);">
+        <span>Subtotal</span>
+        <span id="cart-subtotal-disp">₹0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:0.88rem;color:var(--text-muted);">
+        <span>18% GST (ROUND_HALF_UP)</span>
+        <span id="cart-tax-disp">₹0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:18px;font-family:var(--font-heading);font-weight:800;font-size:1.25rem;">
+        <span>Grand Total</span>
+        <span id="cart-total-disp" style="color:var(--primary);">₹0.00</span>
+      </div>
+      <button class="btn-gradient" style="width:100%;justify-content:center;padding:12px;" onclick="submitOrderFromCart()">
+        Submit DRAFT Order (POST /api/orders/)
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!-- JavaScript Controller                                        -->
+  <!-- ============================================================ -->
+  <script>
+    let activeDealer = { id: 1, name: "ABC Motors (DLR-001)" };
+    let cart = [];
+    let sessionId = "sess_" + Math.random().toString(36).substring(2, 9);
+    let selectedCategory = '';
+    let searchDebounceTimer = null;
+
+    // Toast Notification Utility
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      
+      let icon = '✓';
+      if (type === 'warning') icon = '⚠️';
+      if (type === 'danger') icon = '✕';
+
+      toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 250);
+      }, 3500);
+    }
+
+    // Theme Accent Switcher
+    function setAccentTheme(themeClass) {
+      document.body.className = themeClass;
+      localStorage.setItem('dealerdesk_theme', themeClass);
+      showToast("Color accent updated!", "success");
+    }
+
+    // Tab Switcher
+    function switchNavTab(tabId) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+      const tabs = Array.from(document.querySelectorAll('.nav-tab'));
+      const activeTab = tabs.find(t => t.getAttribute('onclick').includes(tabId));
+      if (activeTab) activeTab.classList.add('active');
+
+      const panel = document.getElementById('panel-' + tabId);
+      if (panel) panel.classList.add('active');
+
+      if (tabId === 'catalogue') loadProducts();
+      if (tabId === 'orders') loadOrders();
+      if (tabId === 'forecasting') loadReorderSuggestions();
+      if (tabId === 'dealers') loadDealers();
+    }
+
+    // Jump from Category Quick-Card directly into filtered catalogue
+    function jumpToCategory(catName) {
+      selectedCategory = catName;
+      switchNavTab('catalogue');
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.classList.toggle('active', b.innerText.toLowerCase().includes(catName.toLowerCase()));
+      });
+      loadProducts();
+      showToast(`Filtered catalogue by ${catName}`);
+    }
+
+    // Toggle Slide-out Cart Drawer
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById('cart-drawer-card');
+      const backdrop = document.getElementById('cart-backdrop');
+      if (open) {
+        drawer.classList.add('open');
+        backdrop.style.display = 'block';
+        renderCartUI();
+      } else {
+        drawer.classList.remove('open');
+        backdrop.style.display = 'none';
+      }
+    }
+
+    // Global Search Input
+    function focusSearch() {
+      document.getElementById('global-search-input').focus();
+    }
+
+    function onGlobalSearch() {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        switchNavTab('catalogue');
+        loadProducts();
+      }, 300);
+    }
+
+    // Filter Category
+    function filterCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      loadProducts();
+    }
+
+    // Stepper counter for product card
+    function stepCardQty(sku, delta) {
+      const input = document.getElementById('qty-input-' + sku);
+      if (!input) return;
+      let val = parseInt(input.value) || 1;
+      val = Math.max(1, val + delta);
+      input.value = val;
+    }
+
+    // Load Products Grid
+    function loadProducts() {
+      const search = document.getElementById('global-search-input').value.trim();
+      let url = '/api/products/?page_size=24';
+      if (search) url += '&search=' + encodeURIComponent(search);
+      if (selectedCategory) url += '&category=' + encodeURIComponent(selectedCategory);
+
+      fetch(url)
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('catalogue-results-counter').innerText = `${data.count} Products Found`;
+          document.getElementById('tab-cat-badge').innerText = data.count;
+          document.getElementById('kpi-product-total').innerText = data.count;
+
+          const container = document.getElementById('product-cards-container');
+          container.innerHTML = '';
+
+          data.results.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            const safeSku = p.sku.replace(/[^a-zA-Z0-9_-]/g, '_');
+            card.innerHTML = `
+              <div>
+                <div class="card-top-row">
+                  <span class="sku-chip">${p.sku}</span>
+                  <span class="stock-badge ${p.stock > 0 ? 'stock-in' : 'stock-out'}">${p.stock} In Stock</span>
+                </div>
+                <h4 class="product-title">${p.name}</h4>
+                <div class="product-fitment">
+                  <span>🏍️</span>
+                  <span>${p.vehicle_fitment || 'Universal Fitment'} • ${p.brand}</span>
+                </div>
+              </div>
+              <div class="card-bottom-row">
+                <div class="price-tag">₹${p.price}</div>
+                <div class="card-action-group">
+                  <div class="qty-stepper">
+                    <button class="qty-btn" onclick="stepCardQty('${safeSku}', -1)">-</button>
+                    <input class="qty-input" id="qty-input-${safeSku}" type="text" value="1" readonly>
+                    <button class="qty-btn" onclick="stepCardQty('${safeSku}', 1)">+</button>
+                  </div>
+                  <button class="btn-add-cart" onclick="addCardItemWithQty('${p.sku}', '${p.name.replace(/'/g, "\\'")}', '${p.price}', ${p.stock}, '${safeSku}')">
+                    + Add
+                  </button>
+                </div>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        });
+    }
+
+    function addCardItemWithQty(sku, name, price, stock, safeSku) {
+      const input = document.getElementById('qty-input-' + safeSku);
+      const qty = input ? parseInt(input.value) || 1 : 1;
+      addCartItem(sku, name, price, stock, qty);
+    }
+
+    // Cart Operations
+    function addCartItem(sku, name, price, stock, quantity = 1) {
+      const item = cart.find(i => i.sku === sku);
+      if (item) {
+        item.quantity += quantity;
+      } else {
+        cart.push({ sku, name, price: parseFloat(price), quantity: quantity, stock });
+      }
+      updateCartCount();
+      showToast(`Added ${quantity}x ${sku} to cart!`);
+      toggleCartDrawer(true);
+    }
+
+    function updateCartCount() {
+      const total = cart.reduce((sum, i) => sum + i.quantity, 0);
+      document.getElementById('cart-counter').innerText = total;
+    }
+
+    function renderCartUI() {
+      const box = document.getElementById('cart-items-box');
+      if (cart.length === 0) {
+        box.innerHTML = '<div style="text-align:center;padding:50px 0;color:var(--text-muted);">Your cart is empty. Add parts from catalogue!</div>';
+        document.getElementById('cart-subtotal-disp').innerText = '₹0.00';
+        document.getElementById('cart-tax-disp').innerText = '₹0.00';
+        document.getElementById('cart-total-disp').innerText = '₹0.00';
+        return;
+      }
+
+      box.innerHTML = '';
+      let subtotal = 0;
+
+      cart.forEach((it, idx) => {
+        const lineTotal = it.price * it.quantity;
+        subtotal += lineTotal;
+
+        const el = document.createElement('div');
+        el.style.cssText = "padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:#fff;display:flex;justify-content:space-between;align-items:center;";
+        el.innerHTML = `
+          <div>
+            <div style="font-weight:700;font-size:0.86rem;">${it.sku}</div>
+            <div style="font-size:0.76rem;color:var(--text-muted);">${it.name}</div>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--primary);margin-top:2px;">₹${it.price.toFixed(2)} each</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button class="btn-outline" style="padding:2px 7px;" onclick="alterCartQty(${idx}, -1)">-</button>
+            <span style="font-weight:700;font-size:0.88rem;min-width:18px;text-align:center;">${it.quantity}</span>
+            <button class="btn-outline" style="padding:2px 7px;" onclick="alterCartQty(${idx}, 1)">+</button>
+            <button class="btn-outline" style="padding:2px 7px;color:var(--danger);" onclick="deleteCartItem(${idx})">✕</button>
+          </div>
+        `;
+        box.appendChild(el);
+      });
+
+      const tax = subtotal * 0.18;
+      const grandTotal = subtotal + tax;
+
+      document.getElementById('cart-subtotal-disp').innerText = `₹${subtotal.toFixed(2)}`;
+      document.getElementById('cart-tax-disp').innerText = `₹${tax.toFixed(2)}`;
+      document.getElementById('cart-total-disp').innerText = `₹${grandTotal.toFixed(2)}`;
+    }
+
+    function alterCartQty(idx, change) {
+      cart[idx].quantity += change;
+      if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+      updateCartCount();
+      renderCartUI();
+    }
+
+    function deleteCartItem(idx) {
+      cart.splice(idx, 1);
+      updateCartCount();
+      renderCartUI();
+      showToast("Item removed from cart");
+    }
+
+    function submitOrderFromCart() {
+      if (cart.length === 0) return alert("Cart is empty!");
+      const payload = {
+        dealer_id: activeDealer.id,
+        items: cart.map(i => ({ sku: i.sku, quantity: i.quantity }))
+      };
+
+      fetch('/api/orders/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.error) {
+          alert("Error creating order: " + res.error.message);
+        } else {
+          showToast(`Order ${res.order_number} created successfully as DRAFT!`, "success");
+          cart = [];
+          updateCartCount();
+          toggleCartDrawer(false);
+          switchNavTab('orders');
+        }
+      });
+    }
+
+    // AI Copilot Execution
+    function executeCopilotTurn() {
+      const input = document.getElementById('copilot-text-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMsg(text, 'user');
+      input.value = '';
+
+      const btn = document.getElementById('copilot-send-btn');
+      btn.disabled = true;
+      btn.innerText = 'Processing...';
+
+      fetch('/api/assistant/chat/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: sessionId,
+          dealer_id: activeDealer.id,
+          message: text
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        btn.disabled = false;
+        btn.innerText = 'Send';
+        if (res.error) {
+          appendMsg("Error: " + res.error.message, 'bot');
+        } else {
+          appendMsg(res.reply, 'bot', res.tool_calls, res.actions);
+        }
+      })
+      .catch(() => {
+        btn.disabled = false;
+        btn.innerText = 'Send';
+        appendMsg("Unable to communicate with assistant endpoint.", 'bot');
+      });
+    }
+
+    function quickAsk(promptText) {
+      document.getElementById('copilot-text-input').value = promptText;
+      executeCopilotTurn();
+    }
+
+    function appendMsg(text, sender, toolCalls = [], actions = []) {
+      const stream = document.getElementById('copilot-chat-box');
+      const msg = document.createElement('div');
+      msg.className = `msg-bubble msg-${sender}`;
+
+      let body = text;
+      if (toolCalls && toolCalls.length > 0) {
+        toolCalls.forEach(tc => {
+          body += `<div><span class="tool-timeline-badge">⚡ Tool Call: <b>${tc.name}</b> ${JSON.stringify(tc.arguments)}</span></div>`;
+        });
+      }
+      if (actions && actions.length > 0) {
+        actions.forEach(act => {
+          body += `<div><span class="tool-timeline-badge order-action">🎉 Action: Draft Order <b>${act.order_number}</b> created</span></div>`;
+        });
+      }
+
+      msg.innerHTML = body;
+      stream.appendChild(msg);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    function resetCopilotSession() {
+      sessionId = "sess_" + Math.random().toString(36).substring(2, 9);
+      document.getElementById('copilot-chat-box').innerHTML = `
+        <div class="msg-bubble msg-bot">
+          Session reset. Ask me about spare parts, live stock levels, or draft a purchase order.
+        </div>
+      `;
+      showToast("Copilot session reset", "success");
+    }
+
+    // Load Orders List
+    function loadOrders() {
+      fetch('/api/orders/?page_size=20')
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('kpi-order-total').innerText = data.count;
+          const tbody = document.getElementById('orders-tbody-list');
+          if (data.results.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;">No orders recorded yet.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = '';
+
+          data.results.forEach(o => {
+            const tr = document.createElement('tr');
+            let statusStyle = 'background:var(--primary-light);color:var(--primary);';
+            if (o.status === 'CONFIRMED') statusStyle = 'background:var(--success-light);color:#065f46;';
+            if (o.status === 'CANCELLED') statusStyle = 'background:var(--danger-light);color:#991b1b;';
+
+            tr.innerHTML = `
+              <td><strong>${o.order_number}</strong></td>
+              <td>Dealer #${o.dealer_id}</td>
+              <td><span style="padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;${statusStyle}">${o.status}</span></td>
+              <td>${o.items.length} lines</td>
+              <td>₹${o.subtotal}</td>
+              <td>₹${o.tax_total}</td>
+              <td><strong>₹${o.grand_total}</strong></td>
+              <td>
+                ${o.status === 'DRAFT' ? `
+                  <button class="btn-outline" style="padding:4px 10px;color:var(--success);border-color:var(--success);" onclick="triggerOrderTransition('${o.order_number}', 'confirm')">Confirm</button>
+                  <button class="btn-outline" style="padding:4px 10px;color:var(--danger);border-color:var(--danger);" onclick="triggerOrderTransition('${o.order_number}', 'cancel')">Cancel</button>
+                ` : ''}
+                ${o.status === 'CONFIRMED' ? `
+                  <button class="btn-outline" style="padding:4px 10px;" onclick="triggerOrderTransition('${o.order_number}', 'dispatch')">Dispatch</button>
+                  <button class="btn-outline" style="padding:4px 10px;color:var(--danger);border-color:var(--danger);" onclick="triggerOrderTransition('${o.order_number}', 'cancel')">Cancel</button>
+                ` : ''}
+                ${o.status === 'DISPATCHED' ? `
+                  <button class="btn-outline" style="padding:4px 10px;" onclick="triggerOrderTransition('${o.order_number}', 'deliver')">Deliver</button>
+                ` : ''}
+                ${o.status === 'DELIVERED' || o.status === 'CANCELLED' ? `<span style="color:var(--text-muted);font-size:0.8rem;">Finalized</span>` : ''}
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    function triggerOrderTransition(orderNumber, action) {
+      fetch(`/api/orders/${orderNumber}/${action}/`, { method: 'POST' })
+        .then(r => r.json())
+        .then(res => {
+          if (res.error) {
+            alert(`Transition Failed: ${res.error.message}`);
+          } else {
+            showToast(`Order ${orderNumber} transitioned: ${action.toUpperCase()}`, "success");
+            loadOrders();
+          }
+        });
+    }
+
+    // Load Reorder Suggestions
+    function loadReorderSuggestions() {
+      fetch('/api/reorder-suggestions/')
+        .then(r => r.json())
+        .then(data => {
+          const tbody = document.getElementById('reorder-tbody-list');
+          tbody.innerHTML = '';
+
+          data.results.forEach(it => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td><strong>${it.sku}</strong></td>
+              <td>${it.current_stock} units</td>
+              <td>${it.lead_time_weeks} weeks</td>
+              <td>${it.lead_time_demand}</td>
+              <td>${it.safety_stock} units</td>
+              <td><strong>${it.reorder_point}</strong></td>
+              <td><span style="font-weight:700;color:${it.reorder_qty > 0 ? 'var(--warning)' : 'var(--success)'};">${it.reorder_qty} units</span></td>
+              <td>
+                ${it.reorder_qty > 0 ? `
+                  <button class="btn-outline" style="padding:4px 8px;font-size:0.78rem;" onclick="addCartItem('${it.sku}', 'Restock Reorder', 500, ${it.current_stock}, ${it.reorder_qty})">
+                    + Restock
+                  </button>
+                ` : '<span style="color:var(--success);font-size:0.78rem;">✓ Healthy</span>'}
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    // Load Dealers
+    function loadDealers() {
+      fetch('/api/dealers/?page_size=25')
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('kpi-dealer-total').innerText = data.count;
+          const tbody = document.getElementById('dealers-tbody-list');
+          tbody.innerHTML = '';
+
+          data.results.forEach(d => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${d.id}</td>
+              <td><strong>${d.dealer_code}</strong></td>
+              <td>${d.name}</td>
+              <td>${d.city || '—'}</td>
+              <td>${d.phone || '—'}</td>
+              <td><span style="font-family:monospace;font-size:0.82rem;">${d.gstin || '—'}</span></td>
+              <td><strong>₹${d.credit_limit}</strong></td>
+              <td>
+                <button class="btn-outline" style="padding:4px 10px;${activeDealer.id === d.id ? 'background:var(--primary-light);border-color:var(--primary);color:var(--primary);' : ''}" onclick="selectActiveDealer(${d.id}, '${d.name}', '${d.dealer_code}')">
+                  ${activeDealer.id === d.id ? '✓ Active' : 'Switch'}
+                </button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    function selectActiveDealer(id, name, code) {
+      activeDealer = { id, name: `${name} (${code})` };
+      document.getElementById('active-dealer-label').innerText = activeDealer.name;
+      document.getElementById('dealer-avatar-initials').innerText = name.substring(0, 2).toUpperCase();
+      loadDealers();
+      showToast(`Active dealer switched to ${name}`);
+    }
+
+    // Trigger Supplier Sync
+    function triggerSupplierSync() {
+      showToast("Triggering supplier catalogue sync...", "warning");
+      fetch('/api/sync/supplier/', { method: 'POST' })
+        .then(r => r.json())
+        .then(res => {
+          if (res.error) {
+            showToast(`Supplier sync notice: ${res.error.message}`, "danger");
+          } else {
+            showToast(`Supplier sync complete! Processed ${res.created + res.updated + res.unchanged} SKUs.`, "success");
+            loadProducts();
+          }
+        });
+    }
+
+    // Keyboard Shortcut (Ctrl+K)
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        focusSearch();
+      }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('dealerdesk_theme');
+      if (savedTheme) document.body.className = savedTheme;
+      loadProducts();
+      loadOrders();
+      loadDealers();
+    });
+  </script>
+</body>
+</html>

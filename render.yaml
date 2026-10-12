@@ -1,0 +1,26 @@
+databases:
+  - name: dealerdesk-db
+    databaseName: dealerdesk
+    user: dealerdesk_user
+    plan: free
+
+services:
+  - type: web
+    name: vikmo-dealerdesk
+    runtime: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn dealerdesk.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dealerdesk-db
+          property: connectionString
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GROQ_API_KEY
+        sync: false
