@@ -1628,6 +1628,7 @@
           </div>
 
           <div class="chat-prompt-chips">
+            <button class="prompt-chip" onclick="quickAsk('I want to buy mobile holder')">📱 Universal mobile holders?</button>
             <button class="prompt-chip" onclick="quickAsk('Do you have front brake pads for Yamaha FZ-S?')">🏍️ Brake pads for Yamaha FZ-S?</button>
             <button class="prompt-chip" onclick="quickAsk('Find chain sprocket kit for Bajaj Pulsar 150')">⛓️ Chain kit for Pulsar 150?</button>
             <button class="prompt-chip" onclick="quickAsk('Check live warehouse stock and price for BRK-1044')">📦 Stock & price for BRK-1044</button>
@@ -2258,7 +2259,7 @@
                 });
                 html += '<td style="text-align:center;">';
                 if (rowSku) {
-                  html += `<button class="ai-order-btn" onclick="quickAddSkuFromChat('${rowSku}', 1)" title="Add ${rowSku} to Cart">🛒 +Cart</button>`;
+                  html += `<button class="ai-order-btn" onclick="quickAddSkuFromChat('${rowSku}', 1)" title="Buy ${rowSku} - Adds to Cart & opens Purchase Order Drawer">🛒 Buy Now</button>`;
                 } else {
                   html += '—';
                 }
