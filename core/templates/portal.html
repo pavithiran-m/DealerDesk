@@ -1658,8 +1658,8 @@
         <span>Grand Total</span>
         <span id="cart-total-disp" style="color:var(--primary);">₹0.00</span>
       </div>
-      <button class="btn-gradient" style="width:100%;justify-content:center;padding:12px;" onclick="submitOrderFromCart()">
-        Submit DRAFT Order (POST /api/orders/)
+      <button id="cart-submit-btn" class="btn-gradient" style="width:100%;justify-content:center;padding:12px;" onclick="submitOrderFromCart()">
+        🛒 Place Purchase Order
       </button>
     </div>
   </aside>
@@ -1908,7 +1908,16 @@
     }
 
     function submitOrderFromCart() {
-      if (cart.length === 0) return alert("Cart is empty!");
+      if (cart.length === 0) {
+        showToast("Your cart is empty! Please add products from the catalogue.", "warning");
+        return;
+      }
+      const submitBtn = document.getElementById('cart-submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Placing Order...";
+      }
+
       const payload = {
         dealer_id: activeDealer.id,
         items: cart.map(i => ({ sku: i.sku, quantity: i.quantity }))
@@ -1921,15 +1930,27 @@
       })
       .then(r => r.json())
       .then(res => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "🛒 Place Purchase Order";
+        }
         if (res.error) {
-          alert("Error creating order: " + res.error.message);
+          showToast("Error creating order: " + res.error.message, "danger");
         } else {
-          showToast(`Order ${res.order_number} created successfully as DRAFT!`, "success");
+          showToast(`Order ${res.order_number} placed successfully as DRAFT!`, "success");
           cart = [];
           updateCartCount();
           toggleCartDrawer(false);
           switchNavTab('orders');
+          loadOrders();
         }
+      })
+      .catch(err => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "🛒 Place Purchase Order";
+        }
+        showToast("Network error placing order. Please try again.", "danger");
       });
     }
 
@@ -2038,17 +2059,18 @@
               <td><strong>₹${o.grand_total}</strong></td>
               <td>
                 ${o.status === 'DRAFT' ? `
-                  <button class="btn-outline" style="padding:4px 10px;color:var(--success);border-color:var(--success);" onclick="triggerOrderTransition('${o.order_number}', 'confirm')">Confirm</button>
-                  <button class="btn-outline" style="padding:4px 10px;color:var(--danger);border-color:var(--danger);" onclick="triggerOrderTransition('${o.order_number}', 'cancel')">Cancel</button>
+                  <button class="btn-outline" style="padding:4px 10px;font-weight:600;color:var(--success);border-color:var(--success);" onclick="triggerOrderTransition('${o.order_number}', 'confirm', this)">✓ Confirm Order</button>
+                  <button class="btn-outline" style="padding:4px 10px;font-weight:600;color:var(--danger);border-color:var(--danger);" onclick="triggerOrderTransition('${o.order_number}', 'cancel', this)">✕ Cancel Order</button>
                 ` : ''}
                 ${o.status === 'CONFIRMED' ? `
-                  <button class="btn-outline" style="padding:4px 10px;" onclick="triggerOrderTransition('${o.order_number}', 'dispatch')">Dispatch</button>
-                  <button class="btn-outline" style="padding:4px 10px;color:var(--danger);border-color:var(--danger);" onclick="triggerOrderTransition('${o.order_number}', 'cancel')">Cancel</button>
+                  <button class="btn-outline" style="padding:4px 10px;font-weight:600;color:var(--primary);border-color:var(--primary);" onclick="triggerOrderTransition('${o.order_number}', 'dispatch', this)">🚚 Dispatch Order</button>
+                  <button class="btn-outline" style="padding:4px 10px;font-weight:600;color:var(--danger);border-color:var(--danger);" onclick="triggerOrderTransition('${o.order_number}', 'cancel', this)">✕ Cancel Order</button>
                 ` : ''}
                 ${o.status === 'DISPATCHED' ? `
-                  <button class="btn-outline" style="padding:4px 10px;" onclick="triggerOrderTransition('${o.order_number}', 'deliver')">Deliver</button>
+                  <button class="btn-outline" style="padding:4px 10px;font-weight:600;color:var(--success);border-color:var(--success);" onclick="triggerOrderTransition('${o.order_number}', 'deliver', this)">📦 Mark Delivered</button>
                 ` : ''}
-                ${o.status === 'DELIVERED' || o.status === 'CANCELLED' ? `<span style="color:var(--text-muted);font-size:0.8rem;">Finalized</span>` : ''}
+                ${o.status === 'DELIVERED' ? `<span style="color:var(--success);font-weight:600;font-size:0.82rem;">✓ Delivered</span>` : ''}
+                ${o.status === 'CANCELLED' ? `<span style="color:var(--danger);font-weight:600;font-size:0.82rem;">✕ Cancelled</span>` : ''}
               </td>
             `;
             tbody.appendChild(tr);
@@ -2056,16 +2078,37 @@
         });
     }
 
-    function triggerOrderTransition(orderNumber, action) {
+    let transitionInProgress = {};
+
+    function triggerOrderTransition(orderNumber, action, btnElement) {
+      const lockKey = `${orderNumber}_${action}`;
+      if (transitionInProgress[lockKey]) return;
+      transitionInProgress[lockKey] = true;
+
+      const originalText = btnElement ? btnElement.innerText : '';
+      if (btnElement) {
+        btnElement.disabled = true;
+        btnElement.innerText = 'Updating...';
+      }
+
       fetch(`/api/orders/${orderNumber}/${action}/`, { method: 'POST' })
         .then(r => r.json())
         .then(res => {
+          delete transitionInProgress[lockKey];
           if (res.error) {
-            alert(`Transition Failed: ${res.error.message}`);
+            showToast(`Unable to update order: ${res.error.message}`, "warning");
           } else {
-            showToast(`Order ${orderNumber} transitioned: ${action.toUpperCase()}`, "success");
-            loadOrders();
+            showToast(`Order ${orderNumber} updated: ${action.toUpperCase()}`, "success");
           }
+          loadOrders();
+        })
+        .catch(err => {
+          delete transitionInProgress[lockKey];
+          if (btnElement) {
+            btnElement.disabled = false;
+            btnElement.innerText = originalText;
+          }
+          showToast("Network error updating order.", "danger");
         });
     }
 

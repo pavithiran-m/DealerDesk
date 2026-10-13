@@ -384,14 +384,14 @@ def run_assistant_turn(session_id: str, dealer_id: int, user_message: str) -> di
             pass
 
 
-    # Heuristic / Deterministic Fallback if API key is not yet set or during offline testing
+    # Heuristic / Deterministic Fallback if external LLM provider is busy or offline
     lowered = user_message.lower()
     final_reply = ""
 
-    # Check for order request
+    # 1. Order Creation Request
     order_sku_match = re.search(r"\b([A-Z]{3}-\d{4})\b", user_message)
-    qty_match = re.search(r"(\d+)\s*(units|pcs|pieces)?", user_message)
-    if "order" in lowered and order_sku_match and qty_match:
+    qty_match = re.search(r"(\d+)\s*(units|pcs|pieces|sets|items)?", user_message)
+    if any(k in lowered for k in ["order", "buy", "purchase"]) and order_sku_match and qty_match:
         sku = order_sku_match.group(1)
         qty = int(qty_match.group(1))
         reported_tool_calls.append({
@@ -402,36 +402,82 @@ def run_assistant_turn(session_id: str, dealer_id: int, user_message: str) -> di
         if order_no:
             actions.append({"type": "draft_order_created", "order_number": order_no})
             cited_skus.add(sku)
-            final_reply = f"I have created a DRAFT order {order_no} for {qty} units of SKU {sku}."
+            final_reply = f"I have created a DRAFT order **{order_no}** for {qty} units of SKU `{sku}`."
+        else:
+            final_reply = f"Could not create draft order: {tool_result.get('error', 'unknown error')}"
 
-    # Check for search parts / availability
-    elif any(k in lowered for k in ["brake", "break", "oil", "chain", "filter", "plug", "part", "pulsar", "pad"]):
-        # Extract vehicle or query
-        query = "brake pads" if any(b in lowered for b in ["brake", "break", "pad"]) else "spare parts"
-        vehicle = "Bajaj Pulsar 150" if "pulsar" in lowered else ""
+    # 2. Specific Stock Check by SKU
+    elif order_sku_match and any(k in lowered for k in ["stock", "price", "cost", "available", "check"]):
+        sku = order_sku_match.group(1)
         reported_tool_calls.append({
-            "name": "search_parts",
-            "arguments": {"query": query, "vehicle": vehicle},
+            "name": "check_stock",
+            "arguments": {"sku": sku},
         })
-        search_res = execute_search_parts(query=query, vehicle=vehicle)
-        if search_res["products"]:
-            first_p = search_res["products"][0]
-            sku = first_p["sku"]
+        stock_res = execute_check_stock(sku)
+        if "error" not in stock_res:
             cited_skus.add(sku)
-            reported_tool_calls.append({
-                "name": "check_stock",
-                "arguments": {"sku": sku},
-            })
-            stock_res = execute_check_stock(sku)
             final_reply = (
-                f"Yes — {first_p['name']} ({sku}) is available. Current stock: {stock_res.get('available_stock', 0)} "
-                f"units at ₹{first_p['price']} each."
+                f"**{stock_res['name']}** (`{sku}`)\n"
+                f"- Available Warehouse Stock: **{stock_res['available_stock']} units**\n"
+                f"- Unit Price: **₹{stock_res['price']}**\n"
+                f"- Fitment: {stock_res.get('vehicle_fitment', 'Universal')}"
             )
         else:
-            final_reply = "I searched our catalogue but couldn't find matching parts. Could you specify the vehicle model?"
+            final_reply = f"SKU `{sku}` was not found in our catalog."
 
+    # 3. Dynamic Product Search for any query (e.g. mobile holder, brake pad, oil, etc.)
     else:
-        final_reply = "Hello! I am DealerDesk AI. You can ask me to search for spare parts, check live warehouse stock and pricing, or create a draft order."
+        # Extract meaningful search terms
+        clean_q = re.sub(
+            r"\b(i\s+want\s+to\s+(buy|order|get|see)|do\s+you\s+have|show\s+me|find|cost\s+of|price\s+of|what\s+is\s+the|search\s+for|can\s+i\s+get|give\s+me|any|some|in\s+stock|available)\b",
+            "",
+            lowered,
+            flags=re.IGNORECASE
+        ).strip()
+        clean_q = re.sub(r"[^\w\s-]", " ", clean_q).strip()
+
+        # Extract vehicle if mentioned
+        vehicle = ""
+        for v in ["pulsar", "fz-s", "r15", "hunter 350", "classic 350", "activa", "splendor", "duke", "xtreme"]:
+            if v in lowered:
+                vehicle = v.title()
+                break
+
+        search_query = clean_q if clean_q else "spare parts"
+        reported_tool_calls.append({
+            "name": "search_parts",
+            "arguments": {"query": search_query, "vehicle": vehicle},
+        })
+        search_res = execute_search_parts(query=search_query, vehicle=vehicle)
+        products = search_res.get("products", [])
+
+        if products:
+            for p in products[:5]:
+                cited_skus.add(p["sku"])
+            
+            lines = [f"Found **{len(products)}** matching items in our warehouse:"]
+            lines.append("")
+            lines.append("| SKU | Product Name | Brand | Price (₹) | Stock |")
+            lines.append("|:---|:---|:---|:---|:---|")
+            for p in products[:6]:
+                lines.append(f"| `{p['sku']}` | {p['name']} | {p['brand']} | ₹{p['price']} | {p['stock']} units |")
+            lines.append("")
+            lines.append("Would you like me to draft an order for any of these items?")
+            final_reply = "\n".join(lines)
+        elif any(g in lowered for g in ["hi", "hello", "hey", "help", "who are you"]):
+            final_reply = (
+                "👋 Hello! I am **DealerDesk AI Copilot**, connected live to your PostgreSQL warehouse.\n\n"
+                "Here is what I can do for your dealership:\n"
+                "1. **Find Parts**: Ask *'Show me mobile holders'* or *'Brake pads for Yamaha FZ-S'*\n"
+                "2. **Check Stock**: Ask *'Check stock and price for ACC-1003'*\n"
+                "3. **Draft Orders**: Ask *'Create a draft order for 3 units of ACC-1003'*\n\n"
+                "What spare parts do you need today?"
+            )
+        else:
+            final_reply = (
+                f"I searched our warehouse catalog for *'{search_query}'* but could not find exact matches.\n"
+                "Could you specify a vehicle model (e.g. *Yamaha FZ-S*, *Pulsar 150*, *Hunter 350*) or category (e.g. *Brakes*, *Accessories*, *Filters*)?"
+            )
 
     ChatMessage.objects.create(
         session_id=session_id,
