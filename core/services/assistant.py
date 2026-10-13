@@ -280,7 +280,7 @@ def run_assistant_turn(session_id: str, dealer_id: int, user_message: str) -> di
         active_llm = {
             "url": "https://api.groq.com/openai/v1/chat/completions",
             "headers": {"Authorization": f"Bearer {groq_api_key}", "Content-Type": "application/json"},
-            "model": "llama-3.3-70b-versatile",
+            "model": "openai/gpt-oss-120b",
         }
     elif openai_api_key and openai_api_key != "your-openai-api-key-here":
         active_llm = {
