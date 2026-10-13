@@ -897,11 +897,11 @@
     }
 
     .msg-bubble {
-      max-width: 80%;
-      padding: 14px 20px;
+      max-width: 92%;
+      padding: 16px 22px;
       border-radius: var(--radius-lg);
       font-size: 0.92rem;
-      line-height: 1.55;
+      line-height: 1.6;
       box-shadow: var(--shadow-subtle);
     }
 
@@ -911,6 +911,7 @@
       color: var(--text-main);
       border: 1px solid var(--border);
       border-bottom-left-radius: 4px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
     }
 
     .msg-user {
@@ -921,24 +922,177 @@
       box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.25);
     }
 
-    .tool-timeline-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #f1f5f9;
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 8px;
-      margin-top: 8px;
-      font-size: 0.78rem;
-      font-family: var(--font-mono);
-      color: var(--text-muted);
+    /* AI Rich Formatted Elements */
+    .ai-para {
+      margin: 6px 0;
+      line-height: 1.6;
+    }
+    .ai-heading {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 12px 0 6px 0;
+    }
+    .ai-list {
+      margin: 8px 0 10px 22px;
+      padding: 0;
+      line-height: 1.6;
+    }
+    .ai-list li {
+      margin-bottom: 4px;
+    }
+    .ai-msg-gap {
+      height: 8px;
     }
 
-    .tool-timeline-badge.order-action {
+    .ai-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 14px 0;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+    .ai-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      text-align: left;
+    }
+    .ai-table th {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      color: var(--text-main);
+      font-weight: 700;
+      padding: 10px 14px;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .ai-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+    .ai-table tr:last-child td {
+      border-bottom: none;
+    }
+    .ai-table tr:hover {
+      background: rgba(var(--primary-rgb), 0.03);
+    }
+
+    .ai-sku-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .ai-stock-badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .ai-stock-badge.in-stock {
       background: var(--success-light);
       color: #065f46;
-      border-color: rgba(16, 185, 129, 0.3);
+    }
+    .ai-stock-badge.low-stock {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .ai-stock-badge.out-stock {
+      background: var(--danger-light);
+      color: #991b1b;
+    }
+    .ai-price-badge {
+      font-weight: 800;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
+    .ai-order-btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(var(--primary-rgb), 0.2);
+    }
+    .ai-order-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+    .ai-inline-code {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .ai-tool-badge {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 8px 14px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: #475569;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .ai-tool-badge .tool-name {
+      font-weight: 700;
+      color: var(--primary);
+      font-family: var(--font-mono);
+    }
+    .ai-tool-badge .tool-args {
+      font-family: var(--font-mono);
+      color: #64748b;
+      background: #ffffff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      word-break: break-all;
+    }
+
+    .ai-action-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      box-shadow: 0 3px 8px rgba(16, 185, 129, 0.1);
     }
 
     .chat-prompt-chips {
@@ -1577,6 +1731,17 @@
           <span class="nav-tab-badge" style="background:#e0f2fe;color:#0284c7;font-size:0.8rem;">Safety Stock = ceil(1.65 × σ × √L)</span>
         </div>
 
+        <!-- Clarification Banner for Restock vs Purchase Order -->
+        <div style="background:var(--primary-light);border:1px solid rgba(var(--primary-rgb),0.2);padding:12px 18px;border-radius:var(--radius-md);margin-bottom:16px;display:flex;align-items:center;gap:12px;font-size:0.84rem;">
+          <span style="font-size:1.3rem;">💡</span>
+          <div>
+            <strong>How Restocking Works:</strong>
+            <span style="color:var(--text-muted);margin-left:4px;">
+              Click <strong>⚡ Restock (+Qty)</strong> to receive goods and update physical warehouse stock directly in PostgreSQL without an order. Or click <strong>🛒 Order Cart</strong> to add suggested quantities to your Purchase Order Cart to procure from the supplier.
+            </span>
+          </div>
+        </div>
+
         <div style="overflow-x:auto;">
           <table class="clean-table">
             <thead>
@@ -1998,24 +2163,248 @@
       executeCopilotTurn();
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatInlineMarkdown(str) {
+      if (!str) return '';
+      let res = escapeHtml(str);
+      res = res.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      res = res.replace(/\*([^\*]+?)\*/g, '<em>$1</em>');
+      res = res.replace(/`([^`]+?)`/g, '<code class="ai-inline-code">$1</code>');
+      return res;
+    }
+
+    function formatTableCell(cell, idx, header) {
+      let formatted = formatInlineMarkdown(cell);
+      const lowerHeader = (header || '').toLowerCase();
+
+      // Highlight SKU code with badge
+      const skuMatch = cell.match(/\b([A-Z]{3}-\d{4})\b/);
+      if (skuMatch) {
+        formatted = formatted.replace(skuMatch[0], `<span class="ai-sku-badge">${skuMatch[0]}</span>`);
+      }
+
+      // Format Stock with colored pill
+      if (lowerHeader.includes('stock') || /\b\d+\s*units\b/i.test(cell)) {
+        const numMatch = cell.match(/(\d+)\s*(?:units)?/i);
+        if (numMatch) {
+          const units = parseInt(numMatch[1]);
+          const cls = units > 20 ? 'in-stock' : (units > 0 ? 'low-stock' : 'out-stock');
+          formatted = `<span class="ai-stock-badge ${cls}">● ${units} units</span>`;
+        }
+      }
+
+      // Format Price
+      if (lowerHeader.includes('price') || lowerHeader.includes('₹') || lowerHeader.includes('rs') || /(?:₹|Rs\.?)\s*[\d,]+/i.test(cell)) {
+        const priceMatch = cell.match(/(?:₹|Rs\.?)?\s*([\d,]+\.?\d*)/);
+        if (priceMatch && priceMatch[1] && !isNaN(parseFloat(priceMatch[1].replace(/,/g, '')))) {
+          formatted = `<span class="ai-price-badge">₹${priceMatch[1]}</span>`;
+        }
+      }
+
+      return formatted;
+    }
+
+    function parseAiMarkdown(raw) {
+      if (!raw) return '';
+      let text = raw.replace(/\r\n/g, '\n');
+      text = text.replace(/\|\s*\|\s*/g, '|\n|');
+
+      const lines = text.split('\n');
+      const output = [];
+      let inTable = false;
+      let tableHeaders = [];
+      let tableRows = [];
+      let inList = false;
+      let listType = 'ul';
+
+      function flushList() {
+        if (inList) {
+          output.push(`</${listType}>`);
+          inList = false;
+        }
+      }
+
+      function flushTable() {
+        if (inTable) {
+          if (tableHeaders.length > 0 || tableRows.length > 0) {
+            let html = '<div class="ai-table-wrap"><table class="ai-table">';
+            if (tableHeaders.length > 0) {
+              html += '<thead><tr>';
+              tableHeaders.forEach(h => {
+                html += `<th>${formatInlineMarkdown(h)}</th>`;
+              });
+              html += '<th style="text-align:center;">Action</th></tr></thead>';
+            }
+            if (tableRows.length > 0) {
+              html += '<tbody>';
+              tableRows.forEach(row => {
+                html += '<tr>';
+                let rowSku = '';
+                row.forEach((cell, idx) => {
+                  const skuMatch = cell.match(/\b([A-Z]{3}-\d{4})\b/);
+                  if (skuMatch && !rowSku) {
+                    rowSku = skuMatch[1];
+                  }
+                  html += `<td>${formatTableCell(cell, idx, tableHeaders[idx] || '')}</td>`;
+                });
+                html += '<td style="text-align:center;">';
+                if (rowSku) {
+                  html += `<button class="ai-order-btn" onclick="quickAddSkuFromChat('${rowSku}', 1)" title="Add ${rowSku} to Cart">🛒 +Cart</button>`;
+                } else {
+                  html += '—';
+                }
+                html += '</td></tr>';
+              });
+              html += '</tbody>';
+            }
+            html += '</table></div>';
+            output.push(html);
+          }
+          inTable = false;
+          tableHeaders = [];
+          tableRows = [];
+        }
+      }
+
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+
+        if (line.includes('|')) {
+          flushList();
+          if (/^\|?(\s*:?-+:?\s*\|)+\s*:?-+:?\s*\|?$/.test(line)) {
+            inTable = true;
+            continue;
+          }
+
+          let cells = line.split('|').map(c => c.trim());
+          if (line.startsWith('|')) cells.shift();
+          if (line.endsWith('|')) cells.pop();
+
+          if (cells.length > 0 && cells.some(c => c.length > 0)) {
+            if (!inTable) {
+              inTable = true;
+              tableHeaders = cells;
+            } else {
+              tableRows.push(cells);
+            }
+            continue;
+          }
+        }
+
+        flushTable();
+
+        if (!line) {
+          flushList();
+          output.push('<div class="ai-msg-gap"></div>');
+          continue;
+        }
+
+        if (line.startsWith('### ')) {
+          flushList();
+          output.push(`<h4 class="ai-heading">${formatInlineMarkdown(line.substring(4))}</h4>`);
+        } else if (line.startsWith('## ')) {
+          flushList();
+          output.push(`<h3 class="ai-heading">${formatInlineMarkdown(line.substring(3))}</h3>`);
+        } else if (line.startsWith('# ')) {
+          flushList();
+          output.push(`<h2 class="ai-heading">${formatInlineMarkdown(line.substring(2))}</h2>`);
+        } else if (/^[-*]\s+/.test(line)) {
+          if (!inList || listType !== 'ul') {
+            flushList();
+            inList = true;
+            listType = 'ul';
+            output.push('<ul class="ai-list">');
+          }
+          output.push(`<li>${formatInlineMarkdown(line.replace(/^[-*]\s+/, ''))}</li>`);
+        } else if (/^\d+\.\s+/.test(line)) {
+          if (!inList || listType !== 'ol') {
+            flushList();
+            inList = true;
+            listType = 'ol';
+            output.push('<ol class="ai-list">');
+          }
+          output.push(`<li>${formatInlineMarkdown(line.replace(/^\d+\.\s+/, ''))}</li>`);
+        } else {
+          flushList();
+          output.push(`<p class="ai-para">${formatInlineMarkdown(line)}</p>`);
+        }
+      }
+
+      flushList();
+      flushTable();
+      return output.join('');
+    }
+
+    function quickAddSkuFromChat(sku, qty = 1) {
+      showToast(`Adding ${sku} to cart...`, "warning");
+      fetch(`/api/products/${sku}/`)
+        .then(r => r.json())
+        .then(prod => {
+          if (prod.error) {
+            showToast(`Product ${sku} not found`, "danger");
+          } else {
+            addCartItem(prod.sku, prod.name, prod.price, prod.stock, qty);
+            showToast(`Added ${qty}x ${prod.name} (${sku}) to Cart!`, "success");
+          }
+        })
+        .catch(() => {
+          showToast(`Error adding ${sku} to cart`, "danger");
+        });
+    }
+
     function appendMsg(text, sender, toolCalls = [], actions = []) {
       const stream = document.getElementById('copilot-chat-box');
       const msg = document.createElement('div');
       msg.className = `msg-bubble msg-${sender}`;
 
-      let body = text;
-      if (toolCalls && toolCalls.length > 0) {
-        toolCalls.forEach(tc => {
-          body += `<div><span class="tool-timeline-badge">⚡ Tool Call: <b>${tc.name}</b> ${JSON.stringify(tc.arguments)}</span></div>`;
-        });
-      }
-      if (actions && actions.length > 0) {
-        actions.forEach(act => {
-          body += `<div><span class="tool-timeline-badge order-action">🎉 Action: Draft Order <b>${act.order_number}</b> created</span></div>`;
-        });
+      if (sender === 'user') {
+        msg.innerHTML = escapeHtml(text);
+      } else {
+        let bodyHtml = parseAiMarkdown(text);
+
+        if (toolCalls && toolCalls.length > 0) {
+          toolCalls.forEach(tc => {
+            const argsStr = typeof tc.arguments === 'object' ? JSON.stringify(tc.arguments) : tc.arguments;
+            bodyHtml += `
+              <div class="ai-tool-badge">
+                <span style="font-size:1rem;">⚡</span>
+                <span>Database Query: <b class="tool-name">${tc.name}</b></span>
+                <span class="tool-args">${escapeHtml(argsStr)}</span>
+                <span style="color:var(--success);font-weight:700;font-size:0.75rem;">✓ executed</span>
+              </div>
+            `;
+          });
+        }
+
+        if (actions && actions.length > 0) {
+          actions.forEach(act => {
+            bodyHtml += `
+              <div class="ai-action-card">
+                <div style="font-size:1.25rem;">🎉</div>
+                <div style="flex:1;">
+                  <div style="font-weight:800;font-size:0.92rem;color:#065f46;">Purchase Order Draft Created!</div>
+                  <div style="font-size:0.82rem;color:#047857;margin-top:2px;">Order <b>${act.order_number}</b> has been generated in DRAFT status.</div>
+                </div>
+                <button class="btn-gradient" style="padding:4px 12px;font-size:0.78rem;" onclick="switchNavTab('orders'); loadOrders();">
+                  View Orders →
+                </button>
+              </div>
+            `;
+          });
+        }
+
+        msg.innerHTML = bodyHtml;
       }
 
-      msg.innerHTML = body;
       stream.appendChild(msg);
       stream.scrollTop = stream.scrollHeight;
     }
@@ -2132,14 +2521,72 @@
               <td><span style="font-weight:700;color:${it.reorder_qty > 0 ? 'var(--warning)' : 'var(--success)'};">${it.reorder_qty} units</span></td>
               <td>
                 ${it.reorder_qty > 0 ? `
-                  <button class="btn-outline" style="padding:4px 8px;font-size:0.78rem;" onclick="addCartItem('${it.sku}', 'Restock Reorder', 500, ${it.current_stock}, ${it.reorder_qty})">
-                    + Restock
-                  </button>
-                ` : '<span style="color:var(--success);font-size:0.78rem;">✓ Healthy</span>'}
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <button class="btn-gradient" style="padding:4px 9px;font-size:0.74rem;white-space:nowrap;" onclick="directWarehouseRestock('${it.sku}', ${it.current_stock}, ${it.reorder_qty}, this)" title="Directly receive and update warehouse physical stock in PostgreSQL">
+                      ⚡ Restock (+${it.reorder_qty})
+                    </button>
+                    <button class="btn-outline" style="padding:4px 9px;font-size:0.74rem;white-space:nowrap;" onclick="addReorderToPurchaseCart('${it.sku}', ${it.reorder_qty})" title="Add to Purchase Order Cart to procure from distributor">
+                      🛒 Order Cart
+                    </button>
+                  </div>
+                ` : '<span style="color:var(--success);font-size:0.78rem;font-weight:600;">✓ Healthy</span>'}
               </td>
             `;
             tbody.appendChild(tr);
           });
+        });
+    }
+
+    // Direct Warehouse Restock (immediately updates PostgreSQL stock without an order)
+    function directWarehouseRestock(sku, currentStock, reorderQty, btnElement) {
+      if (btnElement) {
+        btnElement.disabled = true;
+        btnElement.innerText = "Restocking...";
+      }
+      const newStock = currentStock + reorderQty;
+      fetch(`/api/inventory/${sku}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: newStock })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.error) {
+          showToast(`Error restocking ${sku}: ${res.error.message}`, "danger");
+          if (btnElement) {
+            btnElement.disabled = false;
+            btnElement.innerText = `⚡ Restock (+${reorderQty})`;
+          }
+        } else {
+          showToast(`⚡ Warehouse Restocked! ${sku} stock updated from ${currentStock} to ${res.quantity} units.`, "success");
+          loadReorderSuggestions();
+          loadProducts();
+        }
+      })
+      .catch(err => {
+        showToast("Network error restocking warehouse.", "danger");
+        if (btnElement) {
+          btnElement.disabled = false;
+          btnElement.innerText = `⚡ Restock (+${reorderQty})`;
+        }
+      });
+    }
+
+    // Add Reorder Suggestion to Purchase Order Cart with genuine catalogue data
+    function addReorderToPurchaseCart(sku, reorderQty) {
+      showToast(`Loading catalogue details for ${sku}...`, "warning");
+      fetch(`/api/products/${sku}/`)
+        .then(r => r.json())
+        .then(prod => {
+          if (prod.error) {
+            addCartItem(sku, 'Procurement Part', 500, 0, reorderQty);
+          } else {
+            addCartItem(prod.sku, prod.name, prod.price, prod.stock, reorderQty);
+          }
+          showToast(`Added ${reorderQty}x ${sku} to Purchase Order Cart.`, "success");
+        })
+        .catch(() => {
+          addCartItem(sku, 'Procurement Part', 500, 0, reorderQty);
         });
     }
 
