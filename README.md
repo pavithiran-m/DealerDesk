@@ -75,3 +75,9 @@ Complete technical justifications and exact line citations are documented in **[
 3. **Idempotency**: Handled via `Idempotency-Key` headers and payload SHA-256 hash validation.
 4. **AI Grounding**: Tool calling restricts the model from hallucinating stock or prices; descriptions are treated strictly as data.
 5. **Leakage-Free ML**: Multi-step lag-based Ridge regression with strict temporal holdout split.
+
+
+Live Application:  (https://vikmo-dealerdesk.onrender.com/)
+
+Complete Code-Review link:
+(https://drive.google.com/file/d/1SmrEuAamd55Z786aGqpiywiItKMNHNCN/view?usp=sharing)
