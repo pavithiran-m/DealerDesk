@@ -98,17 +98,63 @@ IMPORTANT RULES:
 
 def execute_search_parts(query: str = "", vehicle: str = "", category: str = "") -> dict:
     qs = Product.objects.all()
+    
     if query:
-        qs = qs.filter(
-            Q(name__icontains=query)
-            | Q(sku__icontains=query)
-            | Q(description__icontains=query)
-            | Q(brand__icontains=query)
+        clean_q = query.strip()
+        # Direct exact match first
+        exact_qs = qs.filter(
+            Q(name__icontains=clean_q)
+            | Q(sku__icontains=clean_q)
+            | Q(description__icontains=clean_q)
+            | Q(brand__icontains=clean_q)
         )
+        if exact_qs.exists():
+            qs = exact_qs
+        else:
+            # Tokenized matching with singularization (e.g. 'brake pads' -> 'brake' & 'pad')
+            tokens = [w.strip() for w in clean_q.split() if len(w.strip()) > 2]
+            q_and = Q()
+            for t in tokens:
+                s = t.rstrip("s")  # handle plural 'pads' -> 'pad'
+                q_and &= (
+                    Q(name__icontains=s)
+                    | Q(sku__icontains=s)
+                    | Q(category__icontains=s)
+                    | Q(brand__icontains=s)
+                    | Q(vehicle_fitment__icontains=s)
+                )
+            token_qs = qs.filter(q_and)
+            if token_qs.exists():
+                qs = token_qs
+            else:
+                # Fallback: tokenized OR matching
+                q_or = Q()
+                for t in tokens:
+                    s = t.rstrip("s")
+                    q_or |= Q(name__icontains=s) | Q(category__icontains=s)
+                or_qs = qs.filter(q_or)
+                if or_qs.exists():
+                    qs = or_qs
+
     if vehicle:
-        qs = qs.filter(vehicle_fitment__icontains=vehicle)
+        v_clean = vehicle.strip()
+        v_exact = qs.filter(vehicle_fitment__icontains=v_clean)
+        if v_exact.exists():
+            qs = v_exact
+        else:
+            # Try sub-model (e.g. 'Pulsar' from 'Bajaj Pulsar 150')
+            v_tokens = [w for w in v_clean.split() if len(w) > 3]
+            for vt in v_tokens:
+                vt_qs = qs.filter(vehicle_fitment__icontains=vt)
+                if vt_qs.exists():
+                    qs = vt_qs
+                    break
+
     if category:
-        qs = qs.filter(category__icontains=category)
+        c_clean = category.strip()
+        c_qs = qs.filter(category__icontains=c_clean)
+        if c_qs.exists():
+            qs = c_qs
 
     matches = qs[:10]
     results = []
@@ -194,6 +240,16 @@ def execute_create_draft_order(dealer_id: int, items: list) -> Tuple[dict, Optio
     }, order.order_number
 
 
+def sanitize_db_text(s: str) -> str:
+    if not s:
+        return ""
+    s = s.replace("\u20b9", "Rs. ")
+    try:
+        return s.encode("cp1252", errors="replace").decode("cp1252")
+    except Exception:
+        return s
+
+
 def run_assistant_turn(session_id: str, dealer_id: int, user_message: str) -> dict:
     """Processes a single conversational turn with session memory, tool calling, and grounded response."""
     # Record user message in session memory
@@ -201,7 +257,7 @@ def run_assistant_turn(session_id: str, dealer_id: int, user_message: str) -> di
         session_id=session_id,
         dealer_id=dealer_id,
         role="user",
-        content=user_message,
+        content=sanitize_db_text(user_message),
     )
 
     # Fetch last 10 messages for this session
@@ -311,7 +367,7 @@ def run_assistant_turn(session_id: str, dealer_id: int, user_message: str) -> di
                     session_id=session_id,
                     dealer_id=dealer_id,
                     role="assistant",
-                    content=final_reply,
+                    content=sanitize_db_text(final_reply),
                 )
 
                 found_skus = set(re.findall(r"\b[A-Z]{3}-\d{4}\b", final_reply))
@@ -349,9 +405,9 @@ def run_assistant_turn(session_id: str, dealer_id: int, user_message: str) -> di
             final_reply = f"I have created a DRAFT order {order_no} for {qty} units of SKU {sku}."
 
     # Check for search parts / availability
-    elif any(k in lowered for k in ["brake", "oil", "chain", "filter", "plug", "part", "pulsar", "pad"]):
+    elif any(k in lowered for k in ["brake", "break", "oil", "chain", "filter", "plug", "part", "pulsar", "pad"]):
         # Extract vehicle or query
-        query = "brake pads" if "brake" in lowered or "pad" in lowered else "spare parts"
+        query = "brake pads" if any(b in lowered for b in ["brake", "break", "pad"]) else "spare parts"
         vehicle = "Bajaj Pulsar 150" if "pulsar" in lowered else ""
         reported_tool_calls.append({
             "name": "search_parts",
@@ -381,7 +437,7 @@ def run_assistant_turn(session_id: str, dealer_id: int, user_message: str) -> di
         session_id=session_id,
         dealer_id=dealer_id,
         role="assistant",
-        content=final_reply,
+        content=sanitize_db_text(final_reply),
     )
 
     return {
