@@ -80,6 +80,161 @@
       --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
     }
 
+    /* Obsidian Luxury Dark Mode Tokens */
+    body.dark-mode {
+      --bg-base: #0a0e17;
+      --bg-card: #111827;
+      --bg-glass: rgba(17, 24, 39, 0.88);
+      --bg-subtle: #1e293b;
+      --bg-muted: #334155;
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-light: #64748b;
+      
+      --border: #1e293b;
+      --border-highlight: rgba(99, 102, 241, 0.45);
+      
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --shadow-float: 0 20px 30px -10px rgba(0, 0, 0, 0.6);
+      
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.16) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.12) 0px, transparent 50%);
+    }
+
+    body.dark-mode .top-navbar {
+      background: rgba(10, 14, 23, 0.9);
+      border-bottom-color: #1e293b;
+    }
+    body.dark-mode .segmented-nav-container {
+      background: #111827;
+      border-color: #1e293b;
+    }
+    body.dark-mode .nav-tab {
+      color: #94a3b8;
+    }
+    body.dark-mode .nav-tab.active {
+      background: #1e293b;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    }
+    body.dark-mode .stat-card,
+    body.dark-mode .service-status-card,
+    body.dark-mode .product-card,
+    body.dark-mode .cat-quick-card,
+    body.dark-mode .table-container-card,
+    body.dark-mode .pipeline-stepper-box,
+    body.dark-mode .chat-pane,
+    body.dark-mode .copilot-info-pane,
+    body.dark-mode .kpi-card,
+    body.dark-mode .cart-drawer {
+      background: #111827;
+      border-color: #1e293b;
+      color: #f8fafc;
+    }
+    body.dark-mode .clean-table th {
+      background: #1e293b;
+      color: #cbd5e1;
+      border-color: #334155;
+    }
+    body.dark-mode .clean-table td {
+      border-color: #1e293b;
+      color: #f1f5f9;
+    }
+    body.dark-mode .clean-table tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    body.dark-mode .command-search {
+      background: #111827;
+      border-color: #1e293b;
+    }
+    body.dark-mode .command-search input {
+      color: #f8fafc;
+    }
+    body.dark-mode .chat-stream {
+      background: #090d16;
+    }
+    body.dark-mode .msg-bot {
+      background: #111827;
+      border-color: #1e293b;
+      color: #f8fafc;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    }
+    body.dark-mode .ai-table-wrap {
+      background: #111827;
+      border-color: #1e293b;
+    }
+    body.dark-mode .ai-table th {
+      background: #1e293b;
+      color: #cbd5e1;
+      border-color: #334155;
+    }
+    body.dark-mode .ai-table td {
+      border-color: #1e293b;
+      color: #f8fafc;
+    }
+    body.dark-mode .ai-tool-badge {
+      background: #1e293b;
+      border-color: #334155;
+      color: #cbd5e1;
+    }
+    body.dark-mode .ai-tool-badge .tool-args {
+      background: #090d16;
+      border-color: #334155;
+      color: #94a3b8;
+    }
+    body.dark-mode .chat-bottom-bar,
+    body.dark-mode .chat-prompt-chips {
+      background: #111827;
+      border-color: #1e293b;
+    }
+    body.dark-mode .chat-input-field {
+      background: #090d16;
+      border-color: #1e293b;
+      color: #f8fafc;
+    }
+    body.dark-mode .prompt-chip {
+      background: #1e293b;
+      border-color: #334155;
+      color: #cbd5e1;
+    }
+    body.dark-mode .dealer-profile-chip {
+      background: #111827;
+      border-color: #1e293b;
+      color: #f8fafc;
+    }
+    body.dark-mode .cart-footer {
+      background: #111827;
+      border-color: #1e293b;
+    }
+    body.dark-mode .qty-stepper {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    body.dark-mode .qty-input {
+      color: #f8fafc;
+    }
+    body.dark-mode .qty-btn {
+      color: #cbd5e1;
+    }
+    body.dark-mode .cat-pill {
+      background: #111827;
+      border-color: #1e293b;
+      color: #cbd5e1;
+    }
+    body.dark-mode .cat-pill.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    body.dark-mode .cat-icon-box {
+      background: #1e293b;
+    }
+    body.dark-mode .kpi-icon-pill {
+      background: #1e293b;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -238,6 +393,76 @@
     .dot-emerald { background: #059669; }
     .dot-rose { background: #e11d48; }
     .dot-violet { background: #7c3aed; }
+
+    /* Dark Mode Toggle Button */
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-subtle);
+    }
+    .theme-toggle-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    /* Live System Radar Pill */
+    .live-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--success-light);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #065f46;
+      white-space: nowrap;
+    }
+    body.dark-mode .live-status-pill {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.35);
+    }
+
+    /* AI Typing Indicator Animation */
+    .ai-typing-bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+    }
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .typing-dots span {
+      width: 7px;
+      height: 7px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: inline-block;
+      animation: typingBounce 1.4s infinite ease-in-out both;
+    }
+    .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
 
     .dealer-profile-chip {
       display: flex;
@@ -1376,6 +1601,17 @@
 
     <!-- Header Actions -->
     <div class="top-actions">
+      <!-- Live Status Radar -->
+      <div class="live-status-pill" title="Live PostgreSQL Database connected on Render">
+        <span class="pulse-dot"></span>
+        <span>Connected</span>
+      </div>
+
+      <!-- Dark Mode Toggle -->
+      <button id="theme-toggle-btn" class="theme-toggle-btn" onclick="toggleDarkMode()" title="Toggle Obsidian Dark / Sunlight Light Mode">
+        🌙 <span class="theme-toggle-label">Dark</span>
+      </button>
+
       <!-- Theme Switcher -->
       <div class="theme-dots" title="Select Color Accent">
         <div class="theme-dot dot-indigo" onclick="setAccentTheme('')" title="Sapphire Indigo"></div>
@@ -1624,6 +1860,13 @@
           <div class="chat-stream" id="copilot-chat-box">
             <div class="msg-bubble msg-bot">
               👋 <b>Welcome to DealerDesk Copilot.</b> I am connected directly to your PostgreSQL warehouse. I can check live stock across all 600 SKUs, answer vehicle compatibility queries, and draft orders with exact 18% GST calculation. How can I help your dealership today?
+            </div>
+            <!-- Live Typing Animation Bubble -->
+            <div id="ai-typing-indicator" class="msg-bubble msg-bot ai-typing-bubble" style="display:none;">
+              <div class="typing-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">Searching warehouse database & reasoning...</span>
             </div>
           </div>
 
@@ -1961,16 +2204,34 @@
             const card = document.createElement('div');
             card.className = 'product-card';
             const safeSku = p.sku.replace(/[^a-zA-Z0-9_-]/g, '_');
+            
+            let catEmoji = '📦';
+            if (p.category === 'Brakes') catEmoji = '🛑';
+            else if (p.category === 'Chains') catEmoji = '⛓️';
+            else if (p.category === 'Engine & Oils') catEmoji = '🛢️';
+            else if (p.category === 'Universal Accessories' || p.category === 'Accessories') catEmoji = '📱';
+            else if (p.category === 'Filters') catEmoji = '🌪️';
+            else if (p.category === 'Electricals' || p.category === 'Lighting & Electrical') catEmoji = '⚡';
+            else if (p.category === 'Rider Gear') catEmoji = '🪖';
+
+            const isHealthy = p.stock > 20;
+            const isLow = p.stock > 0 && p.stock <= 20;
+            const stockLabel = isHealthy ? '● High Stock' : (isLow ? '▲ Low Stock' : '✕ Out of Stock');
+            const stockColor = isHealthy ? 'var(--success)' : (isLow ? 'var(--warning)' : 'var(--danger)');
+
             card.innerHTML = `
               <div>
                 <div class="card-top-row">
-                  <span class="sku-chip">${p.sku}</span>
-                  <span class="stock-badge ${p.stock > 0 ? 'stock-in' : 'stock-out'}">${p.stock} In Stock</span>
+                  <span class="sku-chip">${catEmoji} ${p.sku}</span>
+                  <span class="stock-badge ${p.stock > 0 ? 'stock-in' : 'stock-out'}">${p.stock} units</span>
                 </div>
                 <h4 class="product-title">${p.name}</h4>
                 <div class="product-fitment">
                   <span>🏍️</span>
-                  <span>${p.vehicle_fitment || 'Universal Fitment'} • ${p.brand}</span>
+                  <span>${p.vehicle_fitment || 'Universal Fitment'} • <b>${p.brand}</b></span>
+                </div>
+                <div style="font-size:0.75rem;font-weight:700;color:${stockColor};margin-bottom:12px;display:flex;align-items:center;gap:4px;">
+                  ${stockLabel}
                 </div>
               </div>
               <div class="card-bottom-row">
@@ -1982,7 +2243,7 @@
                     <button class="qty-btn" onclick="stepCardQty('${safeSku}', 1)">+</button>
                   </div>
                   <button class="btn-add-cart" onclick="addCardItemWithQty('${p.sku}', '${p.name.replace(/'/g, "\\'")}', '${p.price}', ${p.stock}, '${safeSku}')">
-                    + Add
+                    🛒 Add
                   </button>
                 </div>
               </div>
@@ -2131,7 +2392,15 @@
 
       const btn = document.getElementById('copilot-send-btn');
       btn.disabled = true;
-      btn.innerText = 'Processing...';
+      btn.innerText = 'Thinking...';
+
+      const typingEl = document.getElementById('ai-typing-indicator');
+      const chatBox = document.getElementById('copilot-chat-box');
+      if (typingEl && chatBox) {
+        typingEl.style.display = 'inline-flex';
+        chatBox.appendChild(typingEl);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
 
       fetch('/api/assistant/chat/', {
         method: 'POST',
@@ -2146,6 +2415,8 @@
       .then(res => {
         btn.disabled = false;
         btn.innerText = 'Send';
+        if (typingEl) typingEl.style.display = 'none';
+
         if (res.error) {
           appendMsg("Error: " + res.error.message, 'bot');
         } else {
@@ -2155,6 +2426,7 @@
       .catch(() => {
         btn.disabled = false;
         btn.innerText = 'Send';
+        if (typingEl) typingEl.style.display = 'none';
         appendMsg("Unable to communicate with assistant endpoint.", 'bot');
       });
     }
@@ -2652,10 +2924,33 @@
       }
     });
 
+    // Dark Mode Toggle & Persistence
+    function toggleDarkMode() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('dealerdesk_dark_mode', isDark ? 'true' : 'false');
+      updateThemeToggleBtn();
+      showToast(isDark ? 'Obsidian Dark Mode activated' : 'Sunlight Light Mode activated', 'info');
+    }
+
+    function updateThemeToggleBtn() {
+      const isDark = document.body.classList.contains('dark-mode');
+      const btn = document.getElementById('theme-toggle-btn');
+      if (btn) {
+        btn.innerHTML = isDark ? '☀️ <span class="theme-toggle-label">Light</span>' : '🌙 <span class="theme-toggle-label">Dark</span>';
+      }
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       const savedTheme = localStorage.getItem('dealerdesk_theme');
       if (savedTheme) document.body.className = savedTheme;
+      
+      const isDarkMode = localStorage.getItem('dealerdesk_dark_mode') === 'true';
+      if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+      }
+      updateThemeToggleBtn();
+
       loadProducts();
       loadOrders();
       loadDealers();
